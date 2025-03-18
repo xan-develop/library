@@ -20,7 +20,7 @@ import com.fct.library.dto.book.BookDTO;
 import com.fct.library.dto.book.CreateBookDTO;
 import com.fct.library.dto.book.UpdateBookDTO;
 import com.fct.library.model.Book;
-import com.fct.library.service.BookService;
+import com.fct.library.service.interfaces.BookService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

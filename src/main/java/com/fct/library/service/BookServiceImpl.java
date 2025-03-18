@@ -14,42 +14,51 @@ import com.fct.library.model.Book;
 import com.fct.library.model.Category;
 import com.fct.library.repository.BookRepository;
 import com.fct.library.repository.CategoryRepository;
+import com.fct.library.service.interfaces.AuthorService;
+import com.fct.library.service.interfaces.BookService;
 
 import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-public class BookService {
+public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorService authorService;
     private final CategoryRepository categoryRepository;
 
-    public BookService(BookRepository bookRepository, AuthorService authorService, CategoryRepository categoryRepository) {
+    public BookServiceImpl(BookRepository bookRepository, AuthorService authorService, CategoryRepository categoryRepository) {
         this.authorService = authorService;
         this.bookRepository = bookRepository;
         this.categoryRepository = categoryRepository;
     }
 
+    @Override
     public List<BookDTO> findAll() {
         return bookRepository.findAll().stream()
             .map(this::convertToDTO)
             .toList();
     }
 
+    @Override
     public Optional<BookDTO> findById(Long id) {
         return bookRepository.findById(id)
             .map(this::convertToDTO);
     }
+    
+    @Override
     public Optional<BookCopiesDTO> findCopiesById(Long id) {
         return bookRepository.findById(id)
             .map(this::convertToCopiesDTO);
     }
+    
+    @Override
     public List<BookCopiesDTO> findCopies() {
         return bookRepository.findAll().stream()
             .map(this::convertToCopiesDTO)
             .toList();
     }
    
+    @Override
     public Book save(CreateBookDTO book) {
         Author author = authorService.findAuthorById(book.getAuthorId())
             .orElseThrow(() -> new IllegalArgumentException("Author not found"));
@@ -66,10 +75,12 @@ public class BookService {
         return bookRepository.save(newBook);
     }
     
+    @Override
     public void deleteById(Long id) {
         bookRepository.deleteById(id);
     }
     
+    @Override
     public Optional<BookDTO> update(Long id, UpdateBookDTO updateBookDTO) {
         return bookRepository.findById(id)
             .map(existingBook -> {
@@ -111,6 +122,7 @@ public class BookService {
             book.getAuthor().getName()  
         );
     }
+    
     private BookCopiesDTO convertToCopiesDTO(Book book) {
         return new BookCopiesDTO(
             book.getId(),

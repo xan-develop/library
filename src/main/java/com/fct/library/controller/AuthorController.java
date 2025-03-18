@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fct.library.model.Author;
-import com.fct.library.service.AuthorService;
+import com.fct.library.service.interfaces.AuthorService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -119,13 +119,13 @@ public class AuthorController {
             @ApiResponse(responseCode = "404", description = "Autor no encontrado")
     })
     @GetMapping("/name/{name}")
-    public ResponseEntity<Author> getAuthorByName(@PathVariable String name) {
+    public ResponseEntity<List<Author>> getAuthorByName(@PathVariable String name) {
         logger.info("Buscando autor con nombre: {}", name);
-        return authorService.findAuthorByName(name)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> {
-                    logger.warn("Autor con nombre: {} no encontrado", name);
-                    return ResponseEntity.notFound().build();
-                });
+        List<Author> authors = authorService.findAuthorByName(name);
+        if (authors.isEmpty()) {
+            logger.warn("Autor con nombre: {} no encontrado", name);
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(authors);
     }
 }
