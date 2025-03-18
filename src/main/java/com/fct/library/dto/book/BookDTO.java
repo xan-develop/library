@@ -3,17 +3,17 @@ package com.fct.library.dto.book;
 public class BookDTO {
     private Long id;
     private String title;
-    private String genre;
+    private String categoryName;
     private String uniqueCode;
     private String authorName;
     
     // Constructors
     public BookDTO() {}
     
-    public BookDTO(Long id, String title, String genre, String uniqueCode, String authorName) {
+    public BookDTO(Long id, String title, String categoryName, String uniqueCode, String authorName) {
         this.id = id;
         this.title = title;
-        this.genre = genre;
+        this.categoryName = categoryName;
         this.uniqueCode = uniqueCode;
         this.authorName = authorName;
     }
@@ -35,12 +35,12 @@ public class BookDTO {
         this.title = title;
     }
     
-    public String getGenre() {
-        return genre;
+    public String getCategoryName() {
+        return categoryName;
     }
     
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
     
     public String getUniqueCode() {

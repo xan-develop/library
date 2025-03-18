@@ -2,6 +2,7 @@ package com.fct.library.model;
 
 import java.time.LocalDate;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "loan")
+@Schema(description = "Representa un préstamo de un libro")
 public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

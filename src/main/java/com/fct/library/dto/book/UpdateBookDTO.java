@@ -1,23 +1,33 @@
 package com.fct.library.dto.book;
 
-public class CreateBookDTO {
+public class UpdateBookDTO {
+    private Long id;
     private String title;
     private Long categoryId;
     private String uniqueCode;
     private Long authorId;
     
     // Constructors
-    public CreateBookDTO() {}
+    public UpdateBookDTO() {}
     
-    public CreateBookDTO(String title, Long categoryId, String uniqueCode, Long authorId) {
+    public UpdateBookDTO(Long id, String title, Long categoryId, String uniqueCode, Long authorId) {
+        this.id = id;
         this.title = title;
         this.categoryId = categoryId;
         this.uniqueCode = uniqueCode;
         this.authorId = authorId;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getTitle() {
-        return this.title;
+        return title;
     }
 
     public void setTitle(String title) {
@@ -25,7 +35,7 @@ public class CreateBookDTO {
     }
 
     public Long getCategoryId() {
-        return this.categoryId;
+        return categoryId;
     }
 
     public void setCategoryId(Long categoryId) {
@@ -33,7 +43,7 @@ public class CreateBookDTO {
     }
 
     public String getUniqueCode() {
-        return this.uniqueCode;
+        return uniqueCode;
     }
 
     public void setUniqueCode(String uniqueCode) {
@@ -41,7 +51,7 @@ public class CreateBookDTO {
     }
 
     public Long getAuthorId() {
-        return this.authorId;
+        return authorId;
     }
 
     public void setAuthorId(Long authorId) {

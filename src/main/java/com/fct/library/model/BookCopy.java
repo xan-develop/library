@@ -2,6 +2,7 @@ package com.fct.library.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,6 +16,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "book_copy")
+@Schema(description = "Representa una copia de un libro")
 public class BookCopy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +27,10 @@ public class BookCopy {
     private String uniqueIdentifier;
 
     @Column(name = "onloan")
-    private boolean onloan = false;
+    private Boolean onloan = false;
+    
+    @Column(name = "purchased")
+    private Boolean purchased = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
@@ -61,7 +66,15 @@ public class BookCopy {
         return onloan;
     }
 
-    public void setOnloan(boolean on_loan) {
-        this.onloan = on_loan;
+    public void setOnloan(Boolean onloan) {
+        this.onloan = onloan;
+    }
+    
+    public Boolean isPurchased() {
+        return purchased;
+    }
+    
+    public void setPurchased(Boolean purchased) {
+        this.purchased = purchased;
     }
 }

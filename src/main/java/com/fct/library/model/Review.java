@@ -1,5 +1,6 @@
 package com.fct.library.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "review")
+@Schema(description = "Representa una reseña de un libro")
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

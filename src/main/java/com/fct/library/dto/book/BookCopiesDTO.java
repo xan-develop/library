@@ -7,7 +7,7 @@ import com.fct.library.model.BookCopy;
 public class BookCopiesDTO {
     private Long id;
     private String title;
-    private String genre;
+    private String categoryName;
     private String uniqueCode;
     private String authorName;
     private List<BookCopy> copies;
@@ -16,10 +16,10 @@ public class BookCopiesDTO {
     // Constructors
     public BookCopiesDTO() {}
     
-    public BookCopiesDTO(Long id, String title, String genre, String uniqueCode, String authorName, List<BookCopy> copies) {
+    public BookCopiesDTO(Long id, String title, String categoryName, String uniqueCode, String authorName, List<BookCopy> copies) {
         this.id = id;
         this.title = title;
-        this.genre = genre;
+        this.categoryName = categoryName;
         this.uniqueCode = uniqueCode;
         this.authorName = authorName;
         this.copies = copies;
@@ -54,12 +54,12 @@ public class BookCopiesDTO {
         this.title = title;
     }
 
-    public String getGenre() {
-        return this.genre;
+    public String getCategoryName() {
+        return this.categoryName;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getUniqueCode() {
@@ -85,8 +85,4 @@ public class BookCopiesDTO {
     public void setCopies(List<BookCopy> copies) {
         this.copies = copies;
     }
-    
-
-    
-    
 }

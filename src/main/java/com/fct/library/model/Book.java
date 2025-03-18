@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,6 +21,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "book")
+@Schema(description = "Representa un libro en la biblioteca")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +30,6 @@ public class Book {
     @NotBlank(message = "Title cannot be empty")
     @Column(name = "title", nullable = false, length = 255)
     private String title;
-
-    @Column(name = "genre", length = 50)
-    private String genre;
 
     @NotBlank(message = "Unique code cannot be empty")
     @Column(name = "unique_code", nullable = false, length = 20, unique = true)
@@ -43,11 +42,24 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<BookCopy> copies = new ArrayList<>();
+
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Review> reviews = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     // Getters y Setters
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public List<Review> getReviews() {
         return reviews;
     }
@@ -70,14 +82,6 @@ public class Book {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
     }
 
     public String getUniqueCode() {
