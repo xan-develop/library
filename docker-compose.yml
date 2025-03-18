@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: library_postgres
+    environment:
+      POSTGRES_USER: library_admin
+      POSTGRES_PASSWORD: eviden1234
+      POSTGRES_DB: library_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U library_admin -d library_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - library_network
+
+  adminer:
+    image: adminer:latest
+    container_name: library_adminer
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DEFAULT_DB: library_db
+      ADMINER_DEFAULT_USER: library_admin
+      ADMINER_DEFAULT_PASSWORD: eviden1234
+    networks:
+      - library_network
+
+volumes:
+  pgdata:
+
+networks:
+  library_network:
+    driver: bridge
