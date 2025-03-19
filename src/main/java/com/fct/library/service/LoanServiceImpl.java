@@ -70,7 +70,12 @@ public class LoanServiceImpl implements LoanService {
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
-
+    @Override
+    public List<LoanResponseDTO> findActiveLoansByUserId(Long userId) {
+        return loanRepository.findActiveLoansByUserId(userId).stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
     @Override
     public List<LoanResponseDTO> findOverdueLoans() {
         return loanRepository.findByReturnDateIsNull().stream()

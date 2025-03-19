@@ -1,5 +1,7 @@
 package com.fct.library.model;
 
+import java.util.Random;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,6 +22,17 @@ public class Author {
     @NotBlank(message = "Name cannot be empty")
     @Column(name = "name", nullable = false, length = 100)
     private String name;
+
+    public Author() {
+    }
+    public Author(String name) {
+        this.id = new Random().nextLong(2, 1000);
+        this.name = name;
+    }
+    public Author(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     // Getters y Setters
     public Long getId() {

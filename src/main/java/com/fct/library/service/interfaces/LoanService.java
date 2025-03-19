@@ -16,7 +16,7 @@ public interface LoanService {
     List<LoanResponseDTO> findActiveLoans();
     List<LoanResponseDTO> findOverdueLoans();
     List<LoanResponseDTO> findByDateRange(LocalDate startDate, LocalDate endDate);
-    
+    List<LoanResponseDTO> findActiveLoansByUserId(Long userId);
     LoanResponseDTO createLoan(CreateLoanDTO loanDTO);
     Optional<LoanResponseDTO> updateLoan(Long id, UpdateLoanDTO loanDTO);
     Optional<LoanResponseDTO> returnBook(Long id, LocalDate returnDate);

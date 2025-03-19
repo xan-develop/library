@@ -91,6 +91,11 @@ public class LoanController {
         return ResponseEntity.ok(loanService.findActiveLoans());
     }
 
+    @GetMapping("/user/{userId}/active")
+    public ResponseEntity<List<LoanResponseDTO>> getActiveLoansByUserId(
+            @Parameter(description = "ID del usuario") @PathVariable Long userId) {
+        return ResponseEntity.ok(loanService.findActiveLoansByUserId(userId));
+    }
     @Operation(summary = "Obtener préstamos vencidos", description = "Devuelve todos los préstamos que han excedido su fecha de devolución")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Operación exitosa", content = @Content(mediaType = "application/json", schema = @Schema(implementation = LoanResponseDTO.class)))
