@@ -2,7 +2,6 @@ package com.fct.library.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewResponseDTO> findAll() {
         return reviewRepository.findAll().stream()
                 .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -49,21 +48,21 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewResponseDTO> findByBookId(Long bookId) {
         return reviewRepository.findByBookId(bookId).stream()
                 .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public List<ReviewResponseDTO> findByUserId(Long userId) {
         return reviewRepository.findByUserId(userId).stream()
                 .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public List<ReviewResponseDTO> findByRating(Integer rating) {
         return reviewRepository.findByRating(rating).stream()
                 .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -90,14 +89,14 @@ public class ReviewServiceImpl implements ReviewService {
     public Optional<ReviewResponseDTO> update(Long id, ReviewRequestDTO reviewRequestDTO) {
         return reviewRepository.findById(id)
                 .map(review -> {
-                    // Solo actualiza el usuario si se proporciona un ID diferente
+                    // Validaciones
                     if (reviewRequestDTO.getUserId() != null && !review.getUser().getId().equals(reviewRequestDTO.getUserId())) {
                         User user = userRepository.findById(reviewRequestDTO.getUserId())
                                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ID: " + reviewRequestDTO.getUserId()));
                         review.setUser(user);
                     }
                     
-                    // Solo actualiza el libro si se proporciona un ID diferente
+                 
                     if (reviewRequestDTO.getBookId() != null && !review.getBook().getId().equals(reviewRequestDTO.getBookId())) {
                         Book book = bookRepository.findById(reviewRequestDTO.getBookId())
                                 .orElseThrow(() -> new IllegalArgumentException("Libro no encontrado con ID: " + reviewRequestDTO.getBookId()));
@@ -133,7 +132,7 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewRepository.existsByUserIdAndBookId(userId, bookId);
     }
     
-    // Método auxiliar para mapear Review a ReviewResponseDTO
+    // Método para mapear Review a ReviewResponseDTO
     private ReviewResponseDTO mapToResponseDTO(Review review) {
         return new ReviewResponseDTO(
                 review.getId(),

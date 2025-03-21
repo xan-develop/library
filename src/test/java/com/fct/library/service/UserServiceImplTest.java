@@ -23,6 +23,8 @@ import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fct.library.dto.UserDTO;
+import com.fct.library.dto.user.CreateUserDTO;
+import com.fct.library.dto.user.UpdateUserDTO;
 import com.fct.library.dto.user.UserLoansYearDTO;
 import com.fct.library.model.User;
 import com.fct.library.repository.UserRepository;
@@ -37,10 +39,12 @@ class UserServiceImplTest {
     private UserServiceImpl userService;
 
     private User usuario;
+    private CreateUserDTO createUserDTO;
+    private UpdateUserDTO updateUserDTO;
 
     @BeforeEach
     void setUp() {
-        // Eliminada la línea MockitoAnnotations.openMocks(this) ya que es redundante con @ExtendWith(MockitoExtension.class)
+       
 
         User usuario1 = new User();
         usuario1.setId(1L);
@@ -61,6 +65,17 @@ class UserServiceImplTest {
         usuario3.setPhone("456123789");
 
         usuario = usuario1;
+        
+        // Crear DTOs para las pruebas
+        createUserDTO = new CreateUserDTO();
+        createUserDTO.setName("Juan Pérez");
+        createUserDTO.setEmail("juan@example.com");
+        createUserDTO.setPhone("123456789");
+        
+        updateUserDTO = new UpdateUserDTO();
+        updateUserDTO.setName("Nuevo Nombre");
+        updateUserDTO.setEmail("nuevo@example.com");
+        updateUserDTO.setPhone("123456789");
 
         lenient().when(userRepository.findAll()).thenReturn(List.of(usuario1, usuario2, usuario3));
         lenient().when(userRepository.findById(1L)).thenReturn(Optional.of(usuario1));
@@ -69,7 +84,7 @@ class UserServiceImplTest {
     @Test
     void testFindAllUsers() {
         List<UserDTO> users = userService.findAllUsers();
-        // Assert
+       
         assertNotNull(users, "La lista de usuarios no debería ser null");
         assertFalse(users.isEmpty(), "La lista de usuarios no debería estar vacía");
         assertEquals(3, users.size(), "Debería haber exactamente 1 usuario");
@@ -103,41 +118,37 @@ class UserServiceImplTest {
 
     @Test
     void testSaveUser_Success() {
-        when(userRepository.existsByEmail(usuario.getEmail())).thenReturn(false);
-        when(userRepository.save(usuario)).thenReturn(usuario);
+        when(userRepository.existsByEmail(createUserDTO.getEmail())).thenReturn(false);
+        when(userRepository.save(any(User.class))).thenReturn(usuario);
 
-        User savedUser = userService.saveUser(usuario);
+        User savedUser = userService.saveUser(createUserDTO);
 
         assertNotNull(savedUser);
         assertEquals("Juan Pérez", savedUser.getName());
 
-        verify(userRepository, times(1)).existsByEmail(usuario.getEmail());
-        verify(userRepository, times(1)).save(usuario);
+        verify(userRepository, times(1)).existsByEmail(createUserDTO.getEmail());
+        verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
     void testSaveUser_EmailAlreadyExists() {
-        when(userRepository.existsByEmail(usuario.getEmail())).thenReturn(true);
+        when(userRepository.existsByEmail(createUserDTO.getEmail())).thenReturn(true);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> userService.saveUser(usuario));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> userService.saveUser(createUserDTO));
 
         assertEquals("El email ya está registrado", exception.getMessage());
 
-        verify(userRepository, times(1)).existsByEmail(usuario.getEmail());
-        verify(userRepository, never()).save(usuario);
+        verify(userRepository, times(1)).existsByEmail(createUserDTO.getEmail());
+        verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
     void testUpdateUser_Success() {
-        User updatedUser = new User();
-        updatedUser.setName("Nuevo Nombre");
-        updatedUser.setEmail("nuevo@example.com");
-
         when(userRepository.findById(1L)).thenReturn(Optional.of(usuario));
         when(userRepository.existsByEmail("nuevo@example.com")).thenReturn(false);
         when(userRepository.save(any(User.class))).thenReturn(usuario);
 
-        Optional<User> result = userService.updateUser(1L, updatedUser);
+        Optional<User> result = userService.updateUser(1L, updateUserDTO);
 
         assertTrue(result.isPresent());
         assertEquals("Nuevo Nombre", result.get().getName());
@@ -150,14 +161,11 @@ class UserServiceImplTest {
 
     @Test
     void testUpdateUser_EmailAlreadyExists() {
-        User updatedUser = new User();
-        updatedUser.setEmail("nuevo@example.com");
-
         when(userRepository.findById(1L)).thenReturn(Optional.of(usuario));
         when(userRepository.existsByEmail("nuevo@example.com")).thenReturn(true);
 
         Exception exception = assertThrows(IllegalArgumentException.class,
-                () -> userService.updateUser(1L, updatedUser));
+                () -> userService.updateUser(1L, updateUserDTO));
 
         assertEquals("El email ya está registrado", exception.getMessage());
 

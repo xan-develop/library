@@ -1,17 +1,21 @@
 package com.fct.library.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.fct.library.dto.review.ReviewRequestDTO;
 import com.fct.library.dto.review.ReviewResponseDTO;
 import com.fct.library.model.Book;
 import com.fct.library.model.Review;
@@ -43,6 +47,7 @@ public class ReviewServiceImplTest {
     private Review review2;
     private Review review3;
     private List<Review> bookReviews;
+    private ReviewRequestDTO createreview;
 
     @BeforeEach
     void setUp() {
@@ -88,8 +93,45 @@ public class ReviewServiceImplTest {
         review3.setRating(5);
         review3.setComment("Una obra maestra");
 
+        // Configurar DTO de review 
+        createreview = new ReviewRequestDTO();
+        createreview.setBookId(4L);
+        createreview.setComment("Maravilloso");
+        createreview.setRating(2);
+        createreview.setUserId(2L);
+
         // Lista de reviews para el libro 1
         bookReviews = List.of(review1, review2 ,review3);
+    }
+
+    @Test
+    void testCreateReview() {
+        // Configurar mocks
+        when(userRepository.findById(createreview.getUserId())).thenReturn(java.util.Optional.of(user2));
+        when(bookRepository.findById(createreview.getBookId())).thenReturn(java.util.Optional.of(book2));
+        
+        // Configurar mock para guardar
+        Review savedReview = new Review();
+        savedReview.setId(4L);
+        savedReview.setUser(user2);
+        savedReview.setBook(book2);
+        savedReview.setRating(createreview.getRating());
+        savedReview.setComment(createreview.getComment());
+        when(reviewRepository.save(any(Review.class))).thenReturn(savedReview);
+
+        // Ejecutar prueba
+        ReviewResponseDTO newReview = reviewService.create(createreview);
+
+        // Verificaciones
+        assertNotNull(newReview);
+        assertEquals(user2.getId(), newReview.getUserId());
+        assertEquals(createreview.getComment(), newReview.getComment());
+        assertEquals(createreview.getRating(), newReview.getRating());
+        
+        // Verificar que se han llamado 
+        verify(userRepository, times(1)).findById(createreview.getUserId());
+        verify(bookRepository, times(1)).findById(createreview.getBookId());
+        verify(reviewRepository, times(1)).save(any(Review.class));
     }
 
     @Test

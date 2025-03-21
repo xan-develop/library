@@ -1,16 +1,19 @@
 package com.fct.library.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fct.library.dto.loan.LoanResponseDTO;
@@ -117,7 +120,7 @@ public class LoanServiceImplTest {
         assertNotNull(result);
         assertEquals(2, result.size());
         
-        // Verificar que los préstamos devueltos 
+        // Verificar los prestamos devueltos 
         assertEquals(1L, result.get(0).getId());
         assertEquals(user1.getId(), result.get(0).getUserId());
         assertEquals(user1.getName(), result.get(0).getUserName());
@@ -130,7 +133,7 @@ public class LoanServiceImplTest {
         assertEquals(user1.getId(), result.get(1).getUserId());
         assertNull(result.get(1).getReturnDate());
 
-        // Verificar que se llamó al método 
+        // Verificar que se llamo al método 
         verify(loanRepository, times(1)).findActiveLoansByUserId(1L);
     }
 }

@@ -14,6 +14,8 @@ import com.fct.library.repository.UserRepository;
 import com.fct.library.service.interfaces.UserService;
 
 import jakarta.transaction.Transactional;
+import com.fct.library.dto.user.CreateUserDTO;
+import com.fct.library.dto.user.UpdateUserDTO;
 
 @Service
 @Transactional
@@ -39,29 +41,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
+    public User saveUser(CreateUserDTO createUserDTO) {
+        if (userRepository.existsByEmail(createUserDTO.getEmail())) {
             throw new IllegalArgumentException("El email ya está registrado");
         }
+        User user = new User();
+        user.setName(createUserDTO.getName());
+        user.setEmail(createUserDTO.getEmail());
+        user.setPhone(createUserDTO.getPhone());
         return userRepository.save(user);
     }
 
     @Override
-    public Optional<User> updateUser(Long id, User userDetails) {
+    public Optional<User> updateUser(Long id, UpdateUserDTO updateUserDTO) {
         return userRepository.findById(id)
                 .map(existingUser -> {
-                    if (userDetails.getName() != null) {
-                        existingUser.setName(userDetails.getName());
+                    if (updateUserDTO.getName() != null) {
+                        existingUser.setName(updateUserDTO.getName());
                     }
-                    if (userDetails.getEmail() != null) {
-                        if (!existingUser.getEmail().equals(userDetails.getEmail()) &&
-                            userRepository.existsByEmail(userDetails.getEmail())) {
+                    if (updateUserDTO.getEmail() != null) {
+                        if (!existingUser.getEmail().equals(updateUserDTO.getEmail()) &&
+                            userRepository.existsByEmail(updateUserDTO.getEmail())) {
                             throw new IllegalArgumentException("El email ya está registrado");
                         }
-                        existingUser.setEmail(userDetails.getEmail());
+                        existingUser.setEmail(updateUserDTO.getEmail());
                     }
-                    if (userDetails.getPhone() != null) {
-                        existingUser.setPhone(userDetails.getPhone());
+                    if (updateUserDTO.getPhone() != null) {
+                        existingUser.setPhone(updateUserDTO.getPhone());
                     }
                     return userRepository.save(existingUser);
                 });
@@ -82,7 +88,7 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    // Método auxiliar para convertir User a UserDTO
+    // Método para convertir User a UserDTO
     private UserDTO convertToDTO(User user) {
         return new UserDTO(
                 user.getId(),

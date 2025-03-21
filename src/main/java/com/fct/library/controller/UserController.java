@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fct.library.dto.UserDTO;
 import com.fct.library.dto.user.UserLoansYearDTO;
+import com.fct.library.dto.user.CreateUserDTO;
+import com.fct.library.dto.user.UpdateUserDTO;
 import com.fct.library.model.User;
 import com.fct.library.service.interfaces.UserService;
 
@@ -80,10 +82,10 @@ public class UserController {
         @ApiResponse(responseCode = "201", description = "Usuario creado correctamente"),
         @ApiResponse(responseCode = "400", description = "Datos inválidos o email ya registrado")
     })
-    public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
-        logger.info("Creando nuevo usuario con email: {}", user.getEmail());
+    public ResponseEntity<Object> createUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
+        logger.info("Creando nuevo usuario con email: {}", createUserDTO.getEmail());
         try {
-            User createdUser = userService.saveUser(user);
+            User createdUser = userService.saveUser(createUserDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         } catch (IllegalArgumentException e) {
             logger.warn("Error al crear usuario: {}", e.getMessage());
@@ -98,9 +100,9 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
         @ApiResponse(responseCode = "400", description = "Datos inválidos")
     })
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody User userDetails) {
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDTO updateUserDTO) {
         logger.info("Actualizando usuario con ID: {}", id);
-        return userService.updateUser(id, userDetails)
+        return userService.updateUser(id, updateUserDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
